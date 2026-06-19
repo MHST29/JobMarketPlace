@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Test/">
+    <Project Path="Test/API.Test/API.Test.csproj" Id="c2336b5c-fc6d-475d-8499-57e0bb11795d" />
+    <Project Path="Test/Application.Test/Application.Test.csproj" Id="5d0a218c-9a0a-4554-b5d1-c45206d89954" />
+    <Project Path="Test/Domain.Test/Domain.Test.csproj" Id="cc742522-111f-4643-bec2-7b8dbbc72de7" />
+    <Project Path="Test/Infrastructure.Test/Infrastructure.Test.csproj" Id="738fe4ad-ebe9-4065-95db-a827145c9ed6" />
+  </Folder>
+  <Project Path="Src/JobMarketPlace.API/JobMarketPlace.API.csproj" Id="82307314-493d-46af-bda7-cde6416f6e32" />
+  <Project Path="Src/JobMarketPlace.Application/JobMarketPlace.Application.csproj" Id="5ff45e56-3845-4e3e-b21b-6efb3f2b7e61" />
+  <Project Path="Src/JobMarketPlace.Domain/JobMarketPlace.Domain.csproj" Id="50140256-16eb-4d85-845a-2966a2587233" />
+  <Project Path="Src/JobMarketPlace.Infrastructure/JobMarketPlace.Infrastructure.csproj" Id="a4136736-a286-40dd-a617-ba6743eec2f9" />
+</Solution>
