@@ -122,11 +122,11 @@ Expected:
 
 ```bash
 
-git clone https://github.com/<your-account>/community-version-api.git
+git clone https://github.com/MHST29/JobMarketPlace.git
 
 
 
-cd community-version-api
+cd JobMarketPlace
 
 ```
 
@@ -162,7 +162,7 @@ dotnet restore
 
 \\\&#x20; "ConnectionStrings": {
 
-\\\&#x20;   "DefaultConnection": "Host=localhost;Port=5432;Database=communitydb;Username=postgres;Password=password",
+\\\&#x20;   "DefaultConnection": "Host=localhost;Port=5432;Database=postgresql;Username=postgres;Password=password",
 
 \\\&#x20;   "Redis": "localhost:6379"
 
@@ -204,7 +204,7 @@ Create a database:
 
 ```sql
 
-CREATE DATABASE communitydb;
+CREATE DATABASE postgresql;
 
 ```
 
