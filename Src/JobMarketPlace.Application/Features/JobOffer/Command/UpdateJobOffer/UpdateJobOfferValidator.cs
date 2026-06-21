@@ -16,7 +16,6 @@ namespace JobMarketPlace.Application.Features.JobOffer.Command.UpdateJobOffer
             RuleFor(x => x.Price)
                 .NotEmpty()
                 .NotNull()
-                .LessThan(6)
                 .GreaterThan(0);
         }
     }

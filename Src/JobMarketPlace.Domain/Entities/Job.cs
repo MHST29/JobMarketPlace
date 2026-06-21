@@ -2,7 +2,7 @@
 {
     public class Job
     {
-        public Guid Id { get; set; }
+        public Guid Id { get; set; } = Guid.NewGuid();
         public DateOnly StartDate { get; set; }
         public DateOnly DueDate { get; set; }
         public  decimal Budget { get; set; }

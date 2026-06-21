@@ -2,6 +2,8 @@
 using FluentAssertions;
 using JobMarketPlace.Application.Common.Interfaces;
 using JobMarketPlace.Application.Features.Job.Command.UpdateJob;
+using JobMarketPlace.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace Application.Test.Job
@@ -11,9 +13,20 @@ namespace Application.Test.Job
         [Fact]
         public async Task Should_Update_Job()
         {
+            // Arrange
+
+            var options =
+                new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(
+                    Guid.NewGuid().ToString())
+                .Options;
+
+            await using var context =
+                new AppDbContext(options);
+
             var job = new JobMarketPlace.Domain.Entities.Job
             {
-               Id = Guid.NewGuid(),
+                Id = Guid.NewGuid(),
                 StartDate = new DateOnly(2024, 5, 10),
                 DueDate = new DateOnly(2024, 5, 10),
                 Budget = 120000,
@@ -21,16 +34,16 @@ namespace Application.Test.Job
                 AcceptedJobOfferId = new Guid("a0203425-73da-4439-aeaa-15193951dd73"),
                 CustomerId = new Guid("21c671e4-4b67-4cc0-9876-bd90c8dce28b")
             };
+            context.Jobs.Add(job);
 
-            var db = DbContextJobMockFactory.Create(job);
+            await context.SaveChangesAsync();
 
             var handler =
-                new UpdateJobCommandHandler(
-                    db.Object);
+                new UpdateJobCommandHandler(context);
 
             var command =
                 new UpdateJobCommand(
-                    Guid.NewGuid(),
+                    job.Id,
              new DateOnly(2024, 5, 10),
                 new DateOnly(2024, 5, 10),
                 120000,
@@ -38,10 +51,7 @@ namespace Application.Test.Job
                 new Guid("a0203425-73da-4439-aeaa-15193951dd73"),
                 new Guid("21c671e4-4b67-4cc0-9876-bd90c8dce28b"));
 
-            var result =
-                await handler.Handle(
-                    command,
-                    CancellationToken.None);
+            var result = await handler.Handle(command, CancellationToken.None);
 
             result.Should().Be(job.Id);
 

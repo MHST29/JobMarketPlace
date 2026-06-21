@@ -8,7 +8,10 @@ namespace JobMarketPlace.Infrastructure.Persistence
         public static async Task SeedAsync(
         AppDbContext context)
         {
-            await context.Database.MigrateAsync();
+            if (context.Database.IsRelational())
+            {
+                await context.Database.MigrateAsync();
+            }
 
             if (await context.Customers.AnyAsync())
             {

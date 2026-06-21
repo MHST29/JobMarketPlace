@@ -3,6 +3,7 @@ using FluentAssertions;
 using JobMarketPlace.Application.Common.Interfaces;
 using JobMarketPlace.Application.Features.Job.Command.DeleteJob;
 using JobMarketPlace.Domain.Entities;
+using JobMarketPlace.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Test.Job
@@ -12,7 +13,16 @@ namespace Application.Test.Job
         [Fact]
         public async Task Handle_Should_Delete_Job()
         {
+            // Arrange
 
+            var options =
+                new DbContextOptionsBuilder<AppDbContext>()
+                .UseInMemoryDatabase(
+                    Guid.NewGuid().ToString())
+                .Options;
+
+            await using var context =
+                new AppDbContext(options);
 
             var job = new JobMarketPlace.Domain.Entities.Job
             {
@@ -26,12 +36,12 @@ namespace Application.Test.Job
             };
 
             // Arrange
-            var dbContext = DbContextJobMockFactory.Create(job);
+            context.Jobs.Add(job);
 
-            
+            await context.SaveChangesAsync();
+
             var handler =
-                new DeleteJobCommandHandler(
-                    dbContext.Object);
+                new DeleteJobCommandHandler(context);
 
             var command =
                 new DeleteJobCommand(job.Id);

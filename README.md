@@ -122,11 +122,11 @@ Expected:
 
 ```bash
 
-git clone https://github.com/<your-account>/community-version-api.git
+git clone https://github.com/MHST29/JobMarketPlace.git
 
 
 
-cd community-version-api
+cd JobMarketPlace
 
 ```
 
@@ -160,29 +160,29 @@ dotnet restore
 
 {
 
-\\\&#x20; "ConnectionStrings": {
+\\\\\\\&#x20; "ConnectionStrings": {
 
-\\\&#x20;   "DefaultConnection": "Host=localhost;Port=5432;Database=communitydb;Username=postgres;Password=password",
+\\\\\\\&#x20;   "DefaultConnection": "Host=localhost;Port=5432;Database=communitydb;Username=postgres;Password=password",
 
-\\\&#x20;   "Redis": "localhost:6379"
+\\\\\\\&#x20;   "Redis": "localhost:6379"
 
-\\\&#x20; },
-
-
-
-\\\&#x20; "Jwt": {
-
-\\\&#x20;   "Key": "your-secret-key",
-
-\\\&#x20;   "Issuer": "JobMarketPlace",
-
-\\\&#x20;   "Audience": "JobMarketPlace"
-
-\\\&#x20; },
+\\\\\\\&#x20; },
 
 
 
-\\\&#x20; "AllowedHosts": "\\\\\\\*"
+\\\\\\\&#x20; "Jwt": {
+
+\\\\\\\&#x20;   "Key": "your-secret-key",
+
+\\\\\\\&#x20;   "Issuer": "JobMarketPlace",
+
+\\\\\\\&#x20;   "Audience": "JobMarketPlace"
+
+\\\\\\\&#x20; },
+
+
+
+\\\\\\\&#x20; "AllowedHosts": "\\\\\\\\\\\\\\\*"
 
 }
 
@@ -204,7 +204,7 @@ Create a database:
 
 ```sql
 
-CREATE DATABASE communitydb;
+CREATE DATABASE postgresql;
 
 ```
 
@@ -224,11 +224,11 @@ Verify connection.
 
 ```bash
 
-dotnet ef migrations add InitialCreate \\\\\\\\
+dotnet ef migrations add InitialCreate \\\\\\\\\\\\\\\\
 
-\\\\-p src/JobMarketPlace.Infrastructure \\\\\\\\
+\\\\\\\\-p src/JobMarketPlace.Infrastructure \\\\\\\\\\\\\\\\
 
-\\\\-s src/JobMarketPlace.API
+\\\\\\\\-s src/JobMarketPlace.API
 
 ```
 
@@ -240,11 +240,11 @@ Apply migrations:
 
 ```bash
 
-dotnet ef database update \\\\\\\\
+dotnet ef database update \\\\\\\\\\\\\\\\
 
-\\\\-p src/JobMarketPlace.Infrastructure \\\\\\\\
+\\\\\\\\-p src/JobMarketPlace.Infrastructure \\\\\\\\\\\\\\\\
 
-\\\\-s src/JobMarketPlace.API
+\\\\\\\\-s src/JobMarketPlace.API
 
 ```
 
@@ -282,7 +282,7 @@ using var scope = app.Services.CreateScope();
 
 var context = scope.ServiceProvider
 
-\\\&#x20;   .GetRequiredService<AppDbContext>();
+\\\\\\\&#x20;   .GetRequiredService<AppDbContext>();
 
 
 
@@ -302,9 +302,9 @@ await AppDbInitializer.SeedAsync(context);
 
 ```bash
 
-dotnet run \\\\\\\\
+dotnet run \\\\\\\\\\\\\\\\
 
-\\\\--project src/JobMarketPlace.API
+\\\\\\\\--project src/JobMarketPlace.API
 
 ```
 
@@ -354,23 +354,23 @@ Example flow:
 
 Client
 
-\\\&#x20;↓
+\\\\\\\&#x20;↓
 
 Controller
 
-\\\&#x20;↓
+\\\\\\\&#x20;↓
 
 MediatR
 
-\\\&#x20;↓
+\\\\\\\&#x20;↓
 
 Query Handler
 
-\\\&#x20;↓
+\\\\\\\&#x20;↓
 
 Redis
 
-\\\&#x20;↓
+\\\\\\\&#x20;↓
 
 PostgreSQL
 
@@ -398,7 +398,7 @@ Example:
 
 var cached =
 
-await \\\\\\\_cache.GetAsync<SearchCustomersResponse>(cacheKey);
+await \\\\\\\\\\\\\\\_cache.GetAsync<SearchCustomersResponse>(cacheKey);
 
 
 
@@ -406,19 +406,19 @@ if (cached is not null)
 
 {
 
-\\\&#x20;   return cached;
+\\\\\\\&#x20;   return cached;
 
 }
 
 
 
-await \\\\\\\_cache.SetAsync(
+await \\\\\\\\\\\\\\\_cache.SetAsync(
 
-\\\&#x20;   cacheKey,
+\\\\\\\&#x20;   cacheKey,
 
-\\\&#x20;   response,
+\\\\\\\&#x20;   response,
 
-\\\&#x20;   TimeSpan.FromMinutes(10));
+\\\\\\\&#x20;   TimeSpan.FromMinutes(10));
 
 ```
 
@@ -514,15 +514,15 @@ Example:
 
 ```text
 
-\\\\\\\[INF] Handling SearchCustomersQuery
+\\\\\\\\\\\\\\\[INF] Handling SearchCustomersQuery
 
 
 
-\\\\\\\[INF] Handled SearchCustomersQuery
+\\\\\\\\\\\\\\\[INF] Handled SearchCustomersQuery
 
 
 
-\\\\\\\[WRN] SearchCustomersQuery took 650ms
+\\\\\\\\\\\\\\\[WRN] SearchCustomersQuery took 650ms
 
 ```
 
@@ -580,13 +580,13 @@ Response:
 
 {
 
-\\\&#x20; "success": false,
+\\\\\\\&#x20; "success": false,
 
-\\\&#x20; "statusCode": 404,
+\\\\\\\&#x20; "statusCode": 404,
 
-\\\&#x20; "message": "Customer was not found.",
+\\\\\\\&#x20; "message": "Customer was not found.",
 
-\\\&#x20; "traceId": "..."
+\\\\\\\&#x20; "traceId": "..."
 
 }
 

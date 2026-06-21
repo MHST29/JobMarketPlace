@@ -21,9 +21,6 @@ namespace JobMarketPlace.Application.Features.Job.Command.UpdateJob
 
             RuleFor(x => x.Budget)
                 .GreaterThan(0);
-
-            RuleFor(x => x.AcceptedJobOfferId)
-                .NotEmpty();
         }
     }
 }

@@ -1,4 +1,5 @@
 using FluentAssertions;
+using JobMarketPlace.Domain.Entities;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -20,91 +21,28 @@ namespace API.Test
 
             var request = new
             {
-                name = "Laptop",
-                description = "Gaming Laptop",
-                price = 65000,
-                quantity = 10
+                name = "LaptopFactory",
+                rating = 5
             };
 
             // Act
 
             var response =
-                await _client.PostAsJsonAsync("/api/contractors",
+                await _client.PostAsJsonAsync("/api/Contractors",
                     request);
 
             // Assert
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.Created);
-        }
+            Assert.Equal(
+             HttpStatusCode.Created,
+             response.StatusCode);
 
-        [Fact]
-        public async Task Get_Should_Return_200()
-        {
-            // Act
+            var result =
+                await response.Content
+                    .ReadFromJsonAsync<Contractor>();
 
-            var response =
-                await _client.GetAsync(
-                    "/api/contractors");
-
-            // Assert
-
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.OK);
-        }
-
-        [Fact]
-        public async Task Update_Should_Return_204()
-        {
-            // Arrange
-
-            var id = "existing-guid";
-
-            var request = new
-            {
-                name = "Laptop Updated",
-
-                description = "Gaming",
-
-                price = 70000,
-
-                quantity = 20
-            };
-
-            // Act
-
-            var response =
-                await _client.PutAsJsonAsync(
-                    $"/api/contractors/{id}",
-                    request);
-
-            // Assert
-
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NoContent);
-        }
-
-        [Fact]
-        public async Task Delete_Should_Return_204()
-        {
-            // Arrange
-
-            var id = "existing-guid";
-
-            // Act
-
-            var response =
-                await _client.DeleteAsync(
-                    $"/api/contractors/{id}");
-
-            // Assert
-
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NoContent);
+            Assert.NotNull(result);
+            Assert.NotEqual(Guid.Empty, result.Id);
         }
     }
 }

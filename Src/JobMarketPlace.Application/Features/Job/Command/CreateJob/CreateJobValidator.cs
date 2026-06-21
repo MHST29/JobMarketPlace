@@ -17,9 +17,6 @@ namespace JobMarketPlace.Application.Features.Job.Command.CreateJob
 
             RuleFor(x => x.Budget)
                 .GreaterThan(0);
-
-            RuleFor(x => x.AcceptedJobOfferId)
-                .NotEmpty(); 
         }
     }
 }

@@ -11,11 +11,11 @@ namespace JobMarketPlace.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class JobsOfferController : ControllerBase
+    public class JobOffersController : ControllerBase
     {
         private readonly ISender _sender;
 
-        public JobsOfferController(
+        public JobOffersController(
             ISender sender)
         {
             _sender = sender;

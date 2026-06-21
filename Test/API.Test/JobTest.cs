@@ -1,4 +1,6 @@
 ﻿using FluentAssertions;
+using JobMarketPlace.Application.Features.Job.Query.GetAllJobs;
+using JobMarketPlace.Domain.Entities;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -10,7 +12,8 @@ namespace API.Test
 
         public JobTest(CustomWebApplicationFactory factory)
         {
-            _client = factory.CreateClient();
+            _client =
+                factory.CreateClient();
         }
 
         [Fact]
@@ -20,71 +23,109 @@ namespace API.Test
 
             var request = new
             {
-                name = "Laptop",
-                description = "Gaming Laptop",
-                price = 65000,
-                quantity = 10
+                startDate = "2026-06-21",
+                dueDate = "2026-06-30",
+                budget = 10000,
+                description = "New Job",
+                customerId = Guid.NewGuid()
             };
 
             // Act
 
             var response =
-                await _client.PostAsJsonAsync("/api/contractor",
+                await _client.PostAsJsonAsync(
+                    "/api/Jobs",
                     request);
 
             // Assert
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.Created);
+            Assert.Equal(
+                HttpStatusCode.Created,
+                response.StatusCode);
+
+            var result =
+                await response.Content
+                    .ReadFromJsonAsync<Job>();
+
+            Assert.NotNull(result);
+            Assert.NotEqual(Guid.Empty, result.Id);
         }
 
         [Fact]
         public async Task Get_Should_Return_200()
         {
-            // Act
-
-            var response =
-                await _client.GetAsync(
-                    "/api/products");
+            var response = await _client.GetAsync(
+           "/api/Jobs");
 
             // Assert
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.OK);
+
+
+            var jobs =
+                await response.Content
+                    .ReadFromJsonAsync<List<JobResponseDto>>();
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
-        public async Task Update_Should_Return_204()
+        public async Task Update_Should_Return_200()
         {
-            // Arrange
+            // ---------- Arrange ----------
 
-            var id = "existing-guid";
-
-            var request = new
+            var createRequest = new
             {
-                name = "Laptop Updated",
+                StartDate = "2026-06-21",
 
-                description = "Gaming",
+                DueDate = "2026-06-28",
 
-                price = 70000,
+                Budget = 5000,
 
-                quantity = 20
+                Description = "Original Job",
+
+                CustomerId = Guid.NewGuid()
             };
 
-            // Act
+            // Create a job
 
-            var response =
-                await _client.PutAsJsonAsync(
-                    $"/api/products/{id}",
-                    request);
+            var createResponse =
+                await _client.PostAsJsonAsync(
+                    "/api/jobs",
+                    createRequest);
 
-            // Assert
-
-            response.StatusCode
+            createResponse.StatusCode
                 .Should()
-                .Be(HttpStatusCode.NoContent);
+                .Be(HttpStatusCode.Created);
+
+            var createdJob =
+                await createResponse.Content
+                    .ReadFromJsonAsync<Job>();
+
+            // Update payload
+
+            var updateRequest = new
+            {
+                StartDate = "2026-06-22",
+
+                DueDate = "2026-07-05",
+
+                Budget = 15000,
+
+                Description = "Updated Job"
+            };
+
+            // ---------- Act ----------
+
+            var updateResponse =
+                await _client.PutAsJsonAsync(
+                    $"/api/jobs/{createdJob!.Id}",
+                    updateRequest);
+
+            // ---------- Assert ----------
+
+            updateResponse.StatusCode
+                .Should()
+                .Be(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -92,13 +133,35 @@ namespace API.Test
         {
             // Arrange
 
-            var id = "existing-guid";
+            var createRequest = new
+            {
+                StartDate = "2026-06-21",
+
+                DueDate = "2026-06-28",
+
+                Budget = 5000,
+
+                Description =
+                    "Delete Me",
+
+                CustomerId =
+                    Guid.NewGuid()
+            };
+
+            var createResponse =
+                await _client.PostAsJsonAsync(
+                    "/api/jobs",
+                    createRequest);
+
+            var created =
+                await createResponse.Content
+                    .ReadFromJsonAsync<Job>();
 
             // Act
 
             var response =
                 await _client.DeleteAsync(
-                    $"/api/products/{id}");
+                    $"/api/jobs/{created!.Id}");
 
             // Assert
 
@@ -108,3 +171,4 @@ namespace API.Test
         }
     }
 }
+

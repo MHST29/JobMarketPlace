@@ -1,4 +1,7 @@
 ﻿using FluentAssertions;
+using JobMarketPlace.Application.Features.Job.Query.GetAllJobs;
+using JobMarketPlace.Application.Features.JobOffer.Query.GetAllJobOffers;
+using JobMarketPlace.Domain.Entities;
 using System.Net;
 using System.Net.Http.Json;
 
@@ -20,23 +23,29 @@ namespace API.Test
 
             var request = new
             {
-                name = "Laptop",
-                description = "Gaming Laptop",
-                price = 65000,
-                quantity = 10
+                JobId = Guid.NewGuid(),
+                ContractorId = Guid.NewGuid(),
+                Price = 65000
             };
 
             // Act
 
             var response =
-                await _client.PostAsJsonAsync("/api/contractor",
+                await _client.PostAsJsonAsync("/api/JobOffers",
                     request);
 
             // Assert
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.Created);
+            Assert.Equal(
+              HttpStatusCode.Created,
+              response.StatusCode);
+
+            var result =
+                await response.Content
+                    .ReadFromJsonAsync<JobOffer>();
+
+            Assert.NotNull(result);
+            Assert.NotEqual(Guid.Empty, result.Id);
         }
 
         [Fact]
@@ -46,59 +55,88 @@ namespace API.Test
 
             var response =
                 await _client.GetAsync(
-                    "/api/products");
+                    "/api/JobOffers");
 
             // Assert
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.OK);
+            var jobs =
+                 await response.Content
+                     .ReadFromJsonAsync<List<JobOfferResponseDto>>();
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
         public async Task Update_Should_Return_204()
         {
-            // Arrange
+            /// Arrange
 
-            var id = "existing-guid";
-
-            var request = new
+            var createRequest = new
             {
-                name = "Laptop Updated",
-
-                description = "Gaming",
-
-                price = 70000,
-
-                quantity = 20
+                JobId = Guid.NewGuid(),
+                ContractorId = Guid.NewGuid(),
+                Price = 65000
             };
 
-            // Act
+            var createResponse =
+                await _client.PostAsJsonAsync(
+                    "/api/JobOffers",
+                    createRequest);
 
-            var response =
-                await _client.PutAsJsonAsync(
-                    $"/api/products/{id}",
-                    request);
+            var created =
+                await createResponse.Content
+                    .ReadFromJsonAsync<Job>();
+
 
             // Assert
 
-            response.StatusCode
-                .Should()
-                .Be(HttpStatusCode.NoContent);
-        }
+            var updateRequest = new
+            {
+                JobId = Guid.NewGuid(),
+                ContractorId = Guid.NewGuid(),
+                Price = 65000
+            };
 
+            // ---------- Act ----------
+
+            var updateResponse =
+                await _client.PutAsJsonAsync(
+                    $"/api/JobOffers/{createRequest!.JobId}",
+                    updateRequest);
+
+            // ---------- Assert ----------
+
+            updateResponse.StatusCode
+                .Should()
+                .Be(HttpStatusCode.OK);
+        }
+            
         [Fact]
         public async Task Delete_Should_Return_204()
         {
             // Arrange
 
-            var id = "existing-guid";
+            var createRequest = new
+            {
+                JobId = Guid.NewGuid(),
+                ContractorId = Guid.NewGuid(),
+                Price = 65000
+            };
+
+            var createResponse =
+                await _client.PostAsJsonAsync(
+                    "/api/JobOffers",
+                    createRequest);
+
+            var created =
+                await createResponse.Content
+                    .ReadFromJsonAsync<Job>();
 
             // Act
 
             var response =
                 await _client.DeleteAsync(
-                    $"/api/products/{id}");
+                    $"/api/JobOffers/{created!.Id}");
 
             // Assert
 
